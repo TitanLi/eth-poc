@@ -15,6 +15,8 @@ router.get('/personal_listAccounts',personal_listAccounts);
 router.get('/personal_newAccount',personal_newAccount);
 router.get('/personal_sign',personal_sign);
 router.get('/personal_ecRecover',personal_ecRecover);
+router.get('/personal_lockAccount',personal_lockAccount);
+router.get('/personal_unlockAccount',personal_unlockAccount);
 
 /*
 	RPC => {"method": "personal_listAccounts", "params": []}
@@ -131,6 +133,60 @@ async function personal_ecRecover(ctx){
 	};
 	let data = await request(options2);
 
+	ctx.body = data;
+}
+
+/*
+	RPC => {"method": "personal_lockAccount", "params": [Account(String)]}
+*/
+
+async function personal_lockAccount(ctx){
+	let options = {
+		method: 'POST',
+		uri: 'http://10.0.0.83:8545',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: {
+			'method':'personal_lockAccount',
+			'params': [
+				'0xc452827150a26baa976f5ad17a90bde26915f168'
+			],
+			'id':1},
+		json: true
+	};
+	let data = await request(options);
+
+	ctx.body = data;
+}
+
+/*
+	RPC => 	{"method": "personal_unlockAccount", "params": [accountAddress(string), password(string), number]}
+	example :
+		1. > personal.unlockAccount("0x5e97870f263700f46aa00d967821199b9bc5a120", "foo", 30)
+			true
+		2. > personal.unlockAccount("0x5e97870f263700f46aa00d967821199b9bc5a120", null, 30)
+			Unlock account 0x5e97870f263700f46aa00d967821199b9bc5a120
+			Passphrase: 
+			true
+*/
+async function personal_unlockAccount(ctx){
+	let options = {
+		method: 'POST',
+		uri: 'http://10.0.0.83:8545',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: {
+			'method':'personal_unlockAccount',
+			'params': [
+				'0xc452827150a26baa976f5ad17a90bde26915f168',
+				'string',
+				100],
+			'id':1},
+		json: true
+	};
+	let data = await request(options);
 
 	ctx.body = data;
 }
