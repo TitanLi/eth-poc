@@ -33,6 +33,7 @@ router.get('/node2/admin_nodeInfo',node2.admin_nodeInfo);
 
 router.get('/admin_addPeer',transaction.admin_addPeer(process.env.NODE1,'http://127.0.0.1:3006/node2/admin_nodeInfo','172.17.0.3'));
 router.get('/miner_start',transaction.miner_start(process.env.NODE1,1));
+router.get('/miner_stop',transaction.miner_stop(process.env.NODE1));
 app.use(router.middleware());
 app.listen(3006, () => {
 	console.log('listen port on 3006');
