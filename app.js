@@ -2,6 +2,7 @@ const koa = require('koa');
 const Router = require('koa-router');
 const logger = require('koa-logger');
 const bodyparser = require('koa-bodyparser');
+// const web3 = require('web3');
 const EthApi = require('./lib/ethApi.js');
 const transaction = require('./lib/ethTransaction.js');
 require('dotenv').load();
@@ -34,6 +35,7 @@ router.get('/node2/admin_nodeInfo',node2.admin_nodeInfo);
 router.get('/admin_addPeer',transaction.admin_addPeer(process.env.NODE1,'http://127.0.0.1:3006/node2/admin_nodeInfo','172.17.0.3'));
 router.get('/miner_start',transaction.miner_start(process.env.NODE1,1));
 router.get('/miner_stop',transaction.miner_stop(process.env.NODE1));
+router.get('/personal_sendTransaction',transaction.personal_sendTransaction(process.env.NODE1,'0xc452827150a26baa976f5ad17a90bde26915f168','0x4bcb7bafe16c442568f343d352acce72dcf2cde6',6,'string'));
 app.use(router.middleware());
 app.listen(3006, () => {
 	console.log('listen port on 3006');
