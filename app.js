@@ -3,9 +3,11 @@ const Router = require('koa-router');
 const logger = require('koa-logger');
 const bodyparser = require('koa-bodyparser');
 const EthApi = require('./lib/ethApi.js');
+const transaction = require('./lib/ethTransaction.js');
 require('dotenv').load();
 
-const ethApi = new EthApi(process.env.URL);
+const node1 = new EthApi(process.env.NODE1);
+const node2 = new EthApi(process.env.NODE2);
 
 const app = new koa();
 const router = Router();
@@ -13,14 +15,24 @@ const router = Router();
 app.use(logger());
 app.use(bodyparser());
 
-router.get('/personal_listAccounts',ethApi.personal_listAccounts);
-router.get('/personal_newAccount',ethApi.personal_newAccount);
-router.get('/personal_sign',ethApi.personal_sign);
-router.get('/personal_ecRecover',ethApi.personal_ecRecover);
-router.get('/personal_lockAccount',ethApi.personal_lockAccount);
-router.get('/personal_unlockAccount',ethApi.personal_unlockAccount);
+router.get('/node1/personal_listAccounts', node1.personal_listAccounts);
+router.get('/node1/personal_newAccount', node1.personal_newAccount);
+router.get('/node1personal_sign', node1.personal_sign);
+router.get('/node1/personal_ecRecover', node1.personal_ecRecover);
+router.get('/node1/personal_lockAccount', node1.personal_lockAccount);
+router.get('/node1/personal_unlockAccount', node1.personal_unlockAccount);
+router.get('/node1/admin_nodeInfo',node1.admin_nodeInfo);
 
+router.get('/node2/personal_listAccounts', node2.personal_listAccounts);
+router.get('/node2/personal_newAccount', node2.personal_newAccount);
+router.get('/node2/personal_sign', node2.personal_sign);
+router.get('/node2/personal_ecRecover', node2.personal_ecRecover);
+router.get('/node2/personal_lockAccount', node2.personal_lockAccount);
+router.get('/node2/personal_unlockAccount', node2.personal_unlockAccount);
+router.get('/node2/admin_nodeInfo',node2.admin_nodeInfo);
+
+router.get('/admin_addPeer',transaction.admin_addPeer(process.env.NODE1,'http://127.0.0.1:3006/node2/admin_nodeInfo','172.17.0.3'));
 app.use(router.middleware());
-app.listen(3006,() => {
+app.listen(3006, () => {
 	console.log('listen port on 3006');
 });
