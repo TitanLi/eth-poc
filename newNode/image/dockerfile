@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-# MAINTAINER "Titan Lee <Lisheng0706@gmail.com>"
+LABEL maintainer = "Lisheng0706@gmail.com"
 
 USER root
 
@@ -29,36 +29,34 @@ RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.30.1/install.sh | b
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
+# Install git
 RUN apt-get install git -y
+
+# Git clone eth-netstats
 RUN git clone https://github.com/cubedro/eth-netstats
 RUN cd /eth-netstats \ 
     && source $NVM_DIR/nvm.sh \
     && npm install -g npm \
     && npm install \
     && npm install -g grunt-cli
-# RUN npm install
-#CMD ["npm install"]
-#CMD ["npm install -g grunt-cli"]
 
+# Git clone eth-net-intelligence-api
 RUN git clone https://github.com/cubedro/eth-net-intelligence-api
 RUN cd /eth-net-intelligence-api \ 
     && source $NVM_DIR/nvm.sh \
     && npm install -g npm \
     && npm install \
     && npm install -g pm2
-#WORKDIR ~/eth-net-intelligence-api
-#CMD ["npm install"]
-#CMD ["npm install npm install -g pm2"]
-
-# RUN echo pm2 start /eth-net-intelligence-api/app.json >> /root/.bashrc
-# EXPOSE 3000:3000
 
 #ENTRYPOINT source ~/.profile
+
+# Install jq for json use
 RUN apt-get install jq -y
 
-
+# Ethereum init
 COPY ./ethereum.sh /ethereum.sh
 
-# RUN echo ./ethereum.sh >> /root/.bashrc
+RUN echo ./ethereum.sh >> /root/.bashrc
 
+# Install screen
 RUN apt-get install screen -y

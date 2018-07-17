@@ -4,8 +4,6 @@ const logger = require('koa-logger');
 const bodyparser = require('koa-bodyparser');
 const fs = require('fs');
 const compose = require('docker-compose');
-const sudo = require('sudo-js');
-sudo.setPassword('apple');
 require('dotenv').load();
 
 const app = new koa();
@@ -29,8 +27,8 @@ var data = [
 			'LISTENING_PORT': '30303',
 			'INSTANCE_NAME': '',
 			'CONTACT_DETAILS': '',
-			'WS_SERVER': 'http://172.17.0.2:3000',
-			'WS_SECRET': '101',
+			'WS_SERVER': '',
+			'WS_SECRET': '',
 			'VERBOSITY': 2
 		}
 	}
@@ -42,9 +40,9 @@ app.use(bodyparser());
 router.post('/newNode', async function (ctx) {
 	let req = ctx.request.body;
 	console.log(req);
-	data[0].env.INSTANCE_NAME = req.INSTANCE_NAME;
-	data[0].env.WS_SERVER = req.WS_SERVER;
-	data[0].env.WS_SECRET = req.WS_SECRET;
+	data[0].env.INSTANCE_NAME = req.INSTANCE_NAME || process.env.INSTANCE_NAME;
+	data[0].env.WS_SERVER = req.WS_SERVER || process.env.WS_SERVER;
+	data[0].env.WS_SECRET = req.WS_SECRET || process.env.WS_SECRET;
 	await fs.writeFile('./app.json', JSON.stringify(data), 'utf8', function (err) {
 		if (err) {
 			return console.error(err);
