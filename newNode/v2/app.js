@@ -3,7 +3,8 @@ const Router = require('koa-router');
 const logger = require('koa-logger');
 const bodyparser = require('koa-bodyparser');
 const fs = require('fs');
-const compose = require('docker-compose');
+const shell = require('shelljs');
+const exec = require('child_process').exec;
 require('dotenv').load();
 
 const app = new koa();
@@ -43,15 +44,25 @@ router.post('/newNode', async function (ctx) {
 	data[0].env.INSTANCE_NAME = req.INSTANCE_NAME || process.env.INSTANCE_NAME;
 	data[0].env.WS_SERVER = req.WS_SERVER || process.env.WS_SERVER;
 	data[0].env.WS_SECRET = req.WS_SECRET || process.env.WS_SECRET;
-	await fs.writeFile('./app.json', JSON.stringify(data), 'utf8', function (err) {
+	await fs.writeFile('./eth-net-intelligence-api/app.json', JSON.stringify(data), 'utf8', function (err) {
 		if (err) {
 			return console.error(err);
 		}
 	});
-	await compose.up({ cwd: __dirname, log: true }).then(
-		() => console.log('done'),
-		err => console.log('something went wrong:', err.message)
-	);
+	await shell.exec('chmod +x ethereum.sh');
+	await new Promise(function (resolve, reject) {
+		shell.exec('./ethereum.sh', (error, stdout, stderr) => {
+			console.log(`${stdout}`);
+			console.log(`${stderr}`);
+			if (error) {
+				console.log(`exec error: ${error}`);
+				reject();
+			} else {
+				exec('geth --nodiscover --networkid 100 --datadir .etherum/ --rpc --rpcapi admin,debug,miner,personal,txpool,eth,net,web3 --rpcaddr=0.0.0.0 console');
+				resolve();
+			}
+		});
+	});
 	ctx.body = data;
 });
 
