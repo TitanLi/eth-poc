@@ -57,9 +57,9 @@ RUN apt-get install jq -y
 # Install screen
 RUN apt-get install screen -y
 
-COPY ./app.json /eth-net-intelligence-api/app.json
-COPY ./apple.json /apple.json
 COPY ./ethereum.sh /ethereum.sh
 
 RUN echo ./ethereum.sh >> /root/.bashrc
-EXPOSE 8545:8545 3000:3000
+
+EXPOSE 8545:8545
+EXPOSE 3000:3000

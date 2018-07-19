@@ -1,0 +1,9 @@
+{
+    "test" :{
+        "INSTANCE_NAME":"testNode1",
+        "WS_SERVER":"http://172.17.0.2:3000",
+        "WS_SECRET":"101",
+        "puppethFrom":"/volumes/apple.json",
+        "puppeth":"/apple.json"
+    }
+}
