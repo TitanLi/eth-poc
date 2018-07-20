@@ -61,5 +61,5 @@ COPY ./ethereum.sh /ethereum.sh
 
 RUN echo ./ethereum.sh >> /root/.bashrc
 
-EXPOSE 8545:8545
-EXPOSE 3000:3000
+EXPOSE 8545
+EXPOSE 3000

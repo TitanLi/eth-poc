@@ -19,7 +19,9 @@ WS_SERVER=$(jq ".$hostname.WS_SERVER" /volumes/initData.json)
 echo $(jq ".[0].env.WS_SERVER = $WS_SERVER" /eth-net-intelligence-api/app.json) > /eth-net-intelligence-api/app.json
 
 WS_SECRET=$(jq ".$hostname.WS_SECRET" /volumes/initData.json)
-echo $(jq ".[0].env.WS_SERVER = $WS_SECRET" /eth-net-intelligence-api/app.json) > /eth-net-intelligence-api/app.json
+echo $(jq ".[0].env.WS_SECRET = $WS_SECRET" /eth-net-intelligence-api/app.json) > /eth-net-intelligence-api/app.json
+
+echo $(jq '.[0].script = "/eth-net-intelligence-api/app.js"' /eth-net-intelligence-api/app.json) > /eth-net-intelligence-api/app.json
 
 puppethFrom=$(jq ".$hostname.puppethFrom" /volumes/initData.json)
 
